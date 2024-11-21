@@ -70,7 +70,7 @@
 
 	function updateItem() {
 		let app_el = document.getElementById("content");
-		
+	  
 		// The updated content to apply to the books
 		let updatedBook = {
 		  title: "Updated Book",
@@ -85,17 +85,25 @@
 			return response.json();
 		  })
 		  .then((books) => {
-			// Sort books by ID (assuming higher ID is more recent)
+			// Sort books by ID (highest ID is the most recent)
 			books.sort((a, b) => parseInt(b.id) - parseInt(a.id));
 	  
-			// Find the most recent book (with the highest ID)
+			// Find the most recent book (the one with the highest ID)
 			let bookToUpdate = books[0];
 	  
-			// Check if the most recent book is already updated (e.g., its title is "Updated Book")
+			// Check if the most recent book is already updated
+			// For example, we assume a book with a specific title (like "Updated Book") has already been updated
 			if (bookToUpdate.title === "Updated Book") {
 			  console.log("Most recent book is already updated, updating the next one.");
-			  // If the most recent one is updated, select the next one
-			  bookToUpdate = books[1] || books[0]; // If there's no second book, fall back to the first one
+	  
+			  // Loop through the rest of the books to find the next one that has not been updated
+			  bookToUpdate = books.find(book => book.title !== "Updated Book");
+	  
+			  // If no such book is found, return or handle as needed
+			  if (!bookToUpdate) {
+				console.log("All books have already been updated.");
+				return;
+			  }
 			}
 	  
 			console.log("Book to update:", bookToUpdate);
@@ -123,6 +131,7 @@
 			console.error("Fehler beim Aktualisieren:", error);
 		  });
 	  }
+	  
 	  
 
 	function deleteItem() {
